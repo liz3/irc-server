@@ -36,19 +36,16 @@ type Channel struct {
 	ChannelUserModes []ChannelUserModeEntry
 }
 
-func (channel *Channel) UserHasFlag(user *User, mode ChannelUserModeEntry) bool {
-	if mode.Flag == CMUCreator {
+func (channel *Channel) UserHasFlag(user *User, mode ChannelUserMode) bool {
+	if mode == CMUCreator {
 		for _, e := range channel.ChannelUserModes {
 			if e.Flag == CMUCreator && e.Nick == user.Nick && e.M == '+' {
 				return true
 			}
 		}
 	} else {
-		if(user.HasFlag(UserMode(string(mode.Flag)))) { //TODO fix, this is dirty right now
-			return true
-		}
 		for _, e := range channel.ChannelUserModes {
-			if e.Flag == mode.Flag && e.Nick == user.Nick && e.M == '+' {
+			if e.Flag == mode && e.Nick == user.Nick && e.M == '+' {
 				return true
 			}
 		}
@@ -102,7 +99,12 @@ func (c *Channel) GetUserNames() []string  {
 	mutex.Lock()
 	var l []string
 	for _, u := range c.Users {
-		l = append(l, u.Username)
+		if c.UserHasFlag(u,CMUOperator) {
+			l = append(l, "@" + u.Username)
+		} else {
+			l = append(l, u.Username)
+		}
+
 	}
 
 	mutex.Unlock()
