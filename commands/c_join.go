@@ -19,11 +19,18 @@ func JoinCmd() *models.Command {
 			var channelName = strings.ToLower(args[1])
 			var channel *models.Channel = nil
 			issuer.Instance.RunLocked(func() {
-				for _, c := range issuer.Instance.Channels {
-					if c.Name == channelName {
-						channel = c
-						break
+				if len(issuer.Instance.Channels) == 0 {
+					// irst channel
+					issuer.User.AddMode(models.MOperator)
+				} else {
+
+					for _, c := range issuer.Instance.Channels {
+						if c.Name == channelName {
+							channel = c
+							break
+						}
 					}
+
 				}
 				if channel == nil {
 					channel = &models.Channel{

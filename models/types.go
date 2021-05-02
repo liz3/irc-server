@@ -44,7 +44,7 @@ func (channel *Channel) UserHasFlag(user *User, mode ChannelUserModeEntry) bool 
 			}
 		}
 	} else {
-		if(user.UserHasFlag(UserMode(string(mode.Flag)))) { //TODO fix, this is dirty right now
+		if(user.HasFlag(UserMode(string(mode.Flag)))) { //TODO fix, this is dirty right now
 			return true
 		}
 		for _, e := range channel.ChannelUserModes {
@@ -113,11 +113,27 @@ func (user *User) GetUserDescriptor(config *config.Config) string {
 	return user.Nick + "!" + user.Username + "@" +config.Indent
 
 }
-func (user *User) UserHasFlag(flag UserMode) bool {
+func (user *User) HasFlag(flag UserMode) bool {
 	for _, uF := range user.Modes {
 		if uF.Flag == flag && uF.M == '+' {
 			return true
 		}
 	}
 	return false
+}
+func (user *User) AddMode(mode UserMode) {
+	for index, uF := range user.Modes {
+		if uF.Flag == mode{
+			user.Modes[index] = UserModeEntry {
+				Flag: mode,
+					M: '+',
+				}
+		}
+	}
+	user.Modes = append(user.Modes, UserModeEntry {
+		Flag: mode,
+			M: '+',
+		},
+	)
+
 }
