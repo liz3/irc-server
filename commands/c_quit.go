@@ -16,7 +16,7 @@ func QuitCmd() *models.Command {
 			if len(args) > 1 {
 				message = strings.Join(args[1:], " ")
 			}
-			var parts = []string{models.GetUserDescriptor(issuer.User, issuer.Instance.Config), string(models.Quit), ":" + message}
+			var parts = []string{issuer.User.GetUserDescriptor(issuer.Instance.Config), string(models.Quit), ":" + message}
 			for _, conn := range issuer.Instance.ClientConnections {
 				if conn == issuer {
 					continue

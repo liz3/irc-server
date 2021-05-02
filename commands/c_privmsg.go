@@ -31,7 +31,7 @@ func PrivMsgCmd() *models.Command {
 			if channel == nil {
 				return models.InvalidArgument
 			}
-			var parts = []string{models.GetUserDescriptor(issuer.User, issuer.Instance.Config), string(models.PrivMsg), channel.Name, ":" + message}
+			var parts = []string{issuer.User.GetUserDescriptor(issuer.Instance.Config), string(models.PrivMsg), channel.Name, ":" + message}
 
 			channel.Broadcast(parts)
 

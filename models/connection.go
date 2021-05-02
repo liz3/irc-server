@@ -46,10 +46,21 @@ func (c* Client) SendRaw(parts []string) {
 
 }
 
+func (c *Client) SendUser(it ICI, args []Argument) {
+	var parts =  []string { ":" + c.Instance.Config.Indent, string(it), c.User.Nick}
+	for _, arg := range args {
+		if arg.IsPrefixed {
+			parts = append(parts, ":" + arg.Value)
+		} else {
+			parts = append(parts, arg.Value)
+		}
+	}
+	c.SendRaw(parts)
+}
+
+
 func (c *Client) Send(it ICI, args []Argument) {
-	var parts []string
-	parts = append(parts, ":" + c.Instance.Config.Indent)
-	parts = append(parts, string(it))
+	var parts =  []string { ":" + c.Instance.Config.Indent, string(it)}
 
 	for _, arg := range args {
 		if arg.IsPrefixed {

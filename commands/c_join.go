@@ -31,7 +31,15 @@ func JoinCmd() *models.Command {
 						Users: nil,
 						ActiveUsers: nil,
 						Topic: "",
-						ChannelLevel: models.SecretChannel,
+						ChannelModes:[]models.ChannelModeEntry{models.ChannelModeEntry{
+							Flag: models.CMSecret,
+							M: '+',
+						}},
+						ChannelUserModes: []models.ChannelUserModeEntry{models.ChannelUserModeEntry{
+							Flag: models.CMUCreator,
+							Nick: issuer.User.Nick,
+							M: '+',
+						}},
 					}
 					issuer.Instance.Channels = append(issuer.Instance.Channels, channel)
 				}
@@ -40,7 +48,7 @@ func JoinCmd() *models.Command {
 				issuer.ActiveChannels = append(issuer.ActiveChannels, channel)
 			})
 
-			channel.Broadcast([]string{":" + models.GetUserDescriptor(issuer.User, issuer.Instance.Config), string(models.Join), ":" + channelName})
+			channel.Broadcast([]string{":" + issuer.User.GetUserDescriptor( issuer.Instance.Config), string(models.Join), ":" + channelName})
 
 			issuer.Send(models.Join, []models.Argument{
 				models.SingleParam(channelName, true),
@@ -60,15 +68,13 @@ func JoinCmd() *models.Command {
 			var userNames = strings.Join(channel.GetUserNames(), " ")
 
 			for _, entry := range util.SplitMessageIrc(userNames) {
-				issuer.Send(models.RplNameReply, []models.Argument{
-					models.SingleParam(issuer.User.Username, false),
-					models.SingleParam(string(channel.ChannelLevel), false),
+				issuer.SendUser(models.RplNameReply, []models.Argument{
+					models.SingleParam(channel.GetChannelMode(), false),
 					models.SingleParam(channel.Name, false),
 					models.SingleParam(entry, true),
 				})
 			}
-			issuer.Send(models.RplEndNames, []models.Argument{
-				models.SingleParam(issuer.User.Username, false),
+			issuer.SendUser(models.RplEndNames, []models.Argument{
 				models.SingleParam(channel.Name, false),
 				models.SingleParam("End of /NAMES List", true),
 			})

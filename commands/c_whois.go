@@ -19,23 +19,20 @@ func WhoIsCmd() *models.Command {
 				}
 			})
 			if client == nil {
-				issuer.Send(models.ErrNoSuchNick, []models.Argument{
-					models.SingleParam(issuer.User.Nick, false),
+				issuer.SendUser(models.ErrNoSuchNick, []models.Argument{
 					models.SingleParam(args[1], false),
 					models.SingleParam("No such nick/channel", true),
 				})
 
 			} else {
-				issuer.Send(models.RplWhoIsUser, []models.Argument{
-					models.SingleParam(issuer.User.Nick, false),
+				issuer.SendUser(models.RplWhoIsUser, []models.Argument{
 					models.SingleParam(client.User.Nick, false),
 					models.SingleParam(client.User.Username, false),
 					models.SingleParam(client.Listener.RemoteAddr().String(), false),
 					models.StarParam(),
 					models.SingleParam(client.User.Realname, true),
 				})
-				issuer.Send(models.RplEndWhoIs, []models.Argument{
-					models.SingleParam(issuer.User.Nick, false),
+				issuer.SendUser(models.RplEndWhoIs, []models.Argument{
 					models.SingleParam(client.User.Nick, false),
 					models.SingleParam("End of /WHOIS list", true),
 

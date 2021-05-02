@@ -37,6 +37,36 @@ const (
 	ErrNoSuchNick ICI = "401"
 )
 
+type UserMode string
+
+const (
+	MAway UserMode = "a"
+	MInvisible UserMode = "i"
+	MWallOps UserMode = "w"
+	MRestricted UserMode = "r"
+	MOperator UserMode = "o"
+	MLocalOperator UserMode = "O"
+	MReceiveNotices UserMode = "s"
+)
+
+type ChannelMode string
+type ChannelUserMode string
+const (
+	// channel flags
+	CMAnonymous ChannelMode = "a"
+	CMInviteOnly ChannelMode = "i"
+	CMModerated ChannelMode = "m"
+	CMNoMessages ChannelMode = "n"
+	CMQuiet ChannelMode = "q"
+	CMPrivate ChannelMode = "p"
+	CMSecret ChannelMode = "s"
+)
+
+const (
+	CMUCreator ChannelUserMode = "O"
+	CMUOperator ChannelUserMode = "o"
+)
+
 func StarParam() Argument {
 	return Argument{
 		Value: "*",
