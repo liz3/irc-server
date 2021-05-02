@@ -63,9 +63,26 @@ const (
 )
 
 const (
-	CMUCreator ChannelUserMode = "O"
+	CMUCreator ChannelUserMode = "q"
 	CMUOperator ChannelUserMode = "o"
+	CMUVoice ChannelUserMode = "v"
+	CMUModerator ChannelUserMode = "h"
 )
+
+func GetCMUPrefix(mode ChannelUserMode) string {
+	switch mode {
+	case CMUCreator:
+		return "~"
+	case CMUOperator:
+		return "@"
+	case CMUModerator:
+		return "%"
+	case CMUVoice:
+		return "+"
+	default:
+		return ""
+	}
+}
 
 func StarParam() Argument {
 	return Argument{
